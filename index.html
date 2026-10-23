@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La facture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600&display=swap">
+<style>
+/* ── RESET & BASE ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Fiche d'exercices en thème clair : blocs = séances, cartes dépliables, corrections masquables */
+:root {
+  --bg:        #f4f6f9;
+  --surface:   #ffffff;
+  --card:      #ffffff;
+  --border:    #dfe3ea;
+  --border-hi: #b9c0ce;
+  --text:      #1d2230;
+  --text-dim:  #5c6476;
+  --accent:    #b97d00;
+  --accent-bg: #fff6df;
+  --green:     #1b8047;
+  --green-bg:  #ecf7f0;
+  --green-bd:  #c9e6d4;
+  --green-dk:  #12552f;
+  --red:       #c23b3b;
+  --blue:      #2d69ad;
+  --blue-bg:   #edf3fb;
+  --purple:    #6f45ad;
+  --font-head: 'Syne', 'Trebuchet MS', sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --radius:    10px;
+  color-scheme: light;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ── HEADER ──────────────────────────────────────────────── */
+.site-header {
+  background: linear-gradient(135deg, #ffffff 0%, #eef2f8 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 44px 20px 32px;
+  text-align: center;
+}
+.site-header .kicker {
+  display: inline-block;
+  background: var(--accent);
+  color: #ffffff;
+  font-family: var(--font-head);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  padding: 3px 12px;
+  border-radius: 3px;
+  margin-bottom: 18px;
+}
+.site-header h1 {
+  font-family: var(--font-head);
+  font-size: clamp(24px, 6vw, 38px);
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 8px;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+.site-header .sub {
+  color: var(--text-dim);
+  font-size: 14px;
+  font-weight: 400;
+  max-width: 540px;
+  margin: 0 auto 20px;
+}
+.legende {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin: 0 auto 22px;
+  font-size: 12.5px;
+  color: var(--text-dim);
+}
+
+/* ── NAV ANCRES ──────────────────────────────────────────── */
+.nav-anchors {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.nav-anchors a {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 14px;
+  text-decoration: none;
+  transition: border-color .15s, color .15s;
+}
+.nav-anchors a:hover, .nav-anchors a:focus-visible { border-color: var(--accent); color: var(--accent); }
+
+/* ── CONTENEUR PRINCIPAL ─────────────────────────────────── */
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 36px 18px 80px;
+}
+
+/* ── TITRE DE BLOC ───────────────────────────────────────── */
+.bloc-titre {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 52px 0 6px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.bloc-titre:first-child { margin-top: 0; }
+.bloc-titre .icone { font-size: 26px; flex-shrink: 0; }
+.bloc-titre h2 {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.3;
+  text-wrap: balance;
+}
+.bloc-titre h2 small {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+
+/* ── MÉMO ────────────────────────────────────────────────── */
+.memo {
+  background: var(--green-bg);
+  border: 1px solid var(--green-bd);
+  border-left: 4px solid var(--green);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin: 16px 0 24px;
+  font-size: 14px;
+  line-height: 1.75;
+}
+.memo .memo-titre {
+  font-family: var(--font-head);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 8px;
+}
+.memo code {
+  display: block;
+  background: #ffffff;
+  border: 1px solid var(--green-bd);
+  border-radius: 5px;
+  padding: 8px 12px;
+  color: var(--green-dk);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 13.5px;
+  margin: 5px 0;
+}
+.memo .note { color: var(--text-dim); font-size: 13px; margin-top: 8px; }
+
+/* ── CARTE EXERCICE ──────────────────────────────────────── */
+.exo-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 14px;
+  overflow: hidden;
+  transition: border-color .15s;
+}
+.exo-card:hover { border-color: var(--border-hi); }
+
+.exo-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+.exo-header::-webkit-details-marker { display: none; }
+.exo-header:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.exo-num {
+  font-family: var(--font-head);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  min-width: 40px;
+}
+.badge {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 9px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.badge-1 { background: #e9f6ee; color: var(--green); border: 1px solid #bfe2cc; }
+.badge-2 { background: var(--accent-bg); color: #8a5d00; border: 1px solid #efd798; }
+.badge-3 { background: #fbeaea; color: var(--red); border: 1px solid #efc4c4; }
+.badge-exam { background: #f2ecfa; color: var(--purple); border: 1px solid #d9c9ef; }
+
+.exo-titre-txt {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  flex: 1 1 200px;
+  min-width: 0;
+}
+.chevron { color: var(--text-dim); font-size: 13px; flex-shrink: 0; transition: transform .2s; }
+details[open] .chevron { transform: rotate(180deg); }
+
+/* ── CORPS DE L'EXERCICE ─────────────────────────────────── */
+.exo-body { padding: 0 16px 20px; border-top: 1px solid var(--border); }
+
+.contexte {
+  background: var(--blue-bg);
+  border-left: 3px solid var(--blue);
+  border-radius: 0 6px 6px 0;
+  padding: 14px 16px;
+  margin: 16px 0;
+  font-size: 14px;
+  line-height: 1.75;
+}
+.contexte strong { color: var(--text); }
+
+.table-wrap { overflow-x: auto; margin: 12px 0; }
+.tableau-donnees {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  background: var(--surface);
+}
+.tableau-donnees th {
+  background: #eef1f6;
+  color: var(--text-dim);
+  font-family: var(--font-head);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.tableau-donnees td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  vertical-align: top;
+}
+.tableau-donnees tr:last-child td { border-bottom: none; }
+.tableau-donnees td.num { font-weight: 700; color: var(--text); white-space: nowrap; }
+
+.questions { margin: 18px 0 0; }
+.question { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-start; }
+.question .q-num {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  background: var(--accent);
+  color: #ffffff;
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 11px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+.question p { font-size: 14px; margin: 0; min-width: 0; }
+
+/* ── COUP DE POUCE ───────────────────────────────────────── */
+.ordre-grandeur {
+  background: var(--accent-bg);
+  border: 1px solid #efd798;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #6e4b00;
+  margin: 12px 0 0;
+}
+.ordre-grandeur::before { content: "💡 "; }
+
+/* ── BOUTON CORRECTION ───────────────────────────────────── */
+.btn-corrige {
+  background: var(--surface);
+  border: 1px solid var(--border-hi);
+  border-radius: 6px;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 9px 16px;
+  margin-top: 18px;
+  transition: all .15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-corrige:hover, .btn-corrige:focus-visible { border-color: var(--green); color: var(--green); }
+
+/* ── CORRECTION ──────────────────────────────────────────── */
+.correction {
+  display: none;
+  background: var(--green-bg);
+  border: 1px solid var(--green-bd);
+  border-radius: 6px;
+  padding: 16px;
+  margin-top: 14px;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.correction.visible { display: block; }
+.correction .corr-etape {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--green-bd);
+}
+.correction .corr-etape:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.correction .c-num {
+  display: inline-block;
+  background: var(--green);
+  color: #ffffff;
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 10px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 18px;
+  margin-right: 6px;
+}
+.correction code {
+  display: block;
+  background: #ffffff;
+  border: 1px solid var(--green-bd);
+  border-radius: 4px;
+  padding: 6px 12px;
+  color: var(--green-dk);
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  margin: 5px 0;
+}
+.correction .res { font-family: var(--font-head); font-weight: 700; color: var(--text); }
+.correction .conclu { margin-top: 8px; font-size: 13.5px; color: #2c6244; font-style: italic; }
+.correction .tableau-corr { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0; background: #ffffff; }
+.correction .tableau-corr th {
+  background: #dff0e6;
+  color: var(--green-dk);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  text-align: left;
+}
+.correction .tableau-corr td { padding: 6px 10px; border-bottom: 1px solid var(--green-bd); color: #24402f; vertical-align: top; }
+.correction .tableau-corr td.val { font-weight: 700; color: var(--green); }
+
+/* ── SÉPARATEUR ──────────────────────────────────────────── */
+hr.section-sep { border: none; border-top: 1px solid var(--border); margin: 54px 0 0; }
+
+/* ── FOOTER ──────────────────────────────────────────────── */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 28px 20px;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 12px;
+  background: var(--surface);
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 520px) {
+  .exo-titre-txt { font-size: 13.5px; }
+  .contexte { font-size: 13.5px; }
+  .tableau-donnees { font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="kicker">🧾 Gestion appliquée – CAP pâtissier</div>
+  <h1>La facture</h1>
+  <p class="sub">Chapitre 10. 18 exercices en 5 séances, avec la boulangerie-pâtisserie AU PAIN DORÉ. Garde ton manuel ouvert (pages 67 à 74). Ouvre un exercice, réponds sur ton cahier, puis vérifie avec la correction.</p>
+  <div class="legende">
+    <span class="badge badge-1">⬆ décollage</span> je découvre
+    <span class="badge badge-2">◆ intermédiaire</span> j'applique
+    <span class="badge badge-exam">★ examen</span> je m'entraîne
+  </div>
+  <nav class="nav-anchors">
+    <a href="#facture">1 · La facture et ses mentions</a>
+    <a href="#verifier">2 · Vérifier une facture</a>
+    <a href="#tva">3 · La TVA</a>
+    <a href="#reductions">4 · Les réductions</a>
+    <a href="#examen">5 · Sujets type examen</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- ══════════════════════════════════════════════════════════
+     BLOC 1 – LA FACTURE ET SES MENTIONS (séance 1)
+══════════════════════════════════════════════════════════ -->
+<div class="bloc-titre" id="facture">
+  <span class="icone">🧾</span>
+  <h2><small>Séance 1 · 1 h</small>Bloc 1 – La facture et ses mentions obligatoires</h2>
+</div>
+
+<div class="memo">
+  <div class="memo-titre">🗂 mémo</div>
+  <code>Bon de commande → bon de livraison → facture : les 3 documents d'un achat, dans cet ordre.</code>
+  <code>Facture = document envoyé par le fournisseur au client. Elle indique ce que le client doit payer.</code>
+  <code>Mentions obligatoires : identification du fournisseur et du client · numéro et date de la facture · numéro et date du bon de commande et du bon de livraison · détail des produits (quantité, dénomination, prix unitaire HT) · réductions · taux et montant de la TVA · montant total HT et TTC · date ou délai de paiement.</code>
+  <p class="note">Source : document 1 du manuel, page 67. La facture étudiée est la facture n° 278 de CENTRE PRIMEURS, page 68.</p>
+</div>
+
+<!-- EX 1 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 1</span>
+    <span class="badge badge-1">⬆ décollage</span>
+    <span class="exo-titre-txt">Qui envoie quoi, et quand ?</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Le 10 février, <strong>Monsieur Lage</strong> commande des fruits à CENTRE PRIMEURS pour les tartes de la Saint-Valentin. Les fruits arrivent le 11 février. Le 14 février, un document arrive par courrier.
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Remets dans l'ordre : facture – bon de livraison – bon de commande.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Pour chaque document, indique qui l'établit : AU PAIN DORÉ ou CENTRE PRIMEURS.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Quel document est arrivé le 14 février ?</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> regarde le haut des documents 4 et 5 du manuel (page 70) : le nom en haut à gauche est celui qui a rempli le document.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape"><span class="c-num">1</span><code>1. Bon de commande (10/02) → 2. Bon de livraison (11/02) → 3. Facture (14/02)</code></div>
+      <div class="corr-etape"><span class="c-num">2</span>
+        <table class="tableau-corr">
+          <tr><th>Document</th><th>Établi par</th></tr>
+          <tr><td>Bon de commande</td><td class="val">AU PAIN DORÉ (le client)</td></tr>
+          <tr><td>Bon de livraison</td><td class="val">CENTRE PRIMEURS (le fournisseur)</td></tr>
+          <tr><td>Facture</td><td class="val">CENTRE PRIMEURS (le fournisseur)</td></tr>
+        </table>
+      </div>
+      <div class="corr-etape"><span class="c-num">3</span><p class="res">La facture n° 278 du 14/02/2024.</p></div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 2 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 2</span>
+    <span class="badge badge-1">⬆ décollage</span>
+    <span class="exo-titre-txt">Le surligneur en action (exercice 1 du manuel)</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Prends ton manuel <strong>page 68</strong> et un surligneur. Monsieur Lage veut savoir si la facture n° 278 est complète.
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>À l'aide du document 1 (page 67), surligne les mentions obligatoires sur la facture (exercice 1 du manuel).</p></div>
+      <div class="question"><span class="q-num">2</span><p>Recopie sur ton cahier : le numéro de la facture, sa date, et la date limite de paiement.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Quel est le taux de TVA indiqué ?</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> le document 1 contient 9 bulles. Coche chaque bulle quand tu as trouvé l'information sur la facture.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape"><span class="c-num">1</span> À surligner :
+        <code>CENTRE PRIMEURS + adresse, RCS, n° TVA · AU PAIN DORÉ + adresse</code>
+        <code>Facture n° 278 · date : 14/02/2024</code>
+        <code>Bon de commande n° 2024/10 du 10/02/2024 · bon de livraison n° 6589 du 11/02/2024</code>
+        <code>Référence, désignation, quantité, prix unitaire HT de chaque fruit</code>
+        <code>Remise de 5 % · TVA 5,5 % et 1,89 € · net HT 34,29 € · net à payer 36,18 €</code>
+        <code>Échéance de règlement : 19/02/2024 · conditions : aucun escompte</code>
+      </div>
+      <div class="corr-etape"><span class="c-num">2</span><code>Facture n° 278 · date : 14/02/2024 · paiement avant le 19/02/2024</code></div>
+      <div class="corr-etape"><span class="c-num">3</span><p class="res">5,5 %.</p></div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 3 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 3</span>
+    <span class="badge badge-2">◆ intermédiaire</span>
+    <span class="exo-titre-txt">Il manque des mentions !</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Le 3 mars, AU PAIN DORÉ reçoit une nouvelle facture de CENTRE PRIMEURS. Monsieur Lage la trouve « bizarre ». Voici tout ce qui est écrit dessus.
+    </div>
+    <div class="table-wrap">
+      <table class="tableau-donnees">
+        <tr><th>Ce qui figure sur la facture</th></tr>
+        <tr><td>CENTRE PRIMEURS, MIN – BOX 524, 92150 Rungis, RCS et n° TVA</td></tr>
+        <tr><td>AU PAIN DORÉ, 35 bis avenue de la Plaine, 75000 Paris</td></tr>
+        <tr><td>Date : 03/03/2024</td></tr>
+        <tr><td>Bon de livraison n° 6712 du 02/03/2024</td></tr>
+        <tr><td>Fraises cat. 1 – 4 kg – 9,50 € HT/kg – 38,00 € HT</td></tr>
+        <tr><td>Montant HT : 38,00 € · TVA : 2,09 € · net à payer : 40,09 €</td></tr>
+      </table>
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Compare avec le document 1 du manuel. Trouve les 4 mentions obligatoires qui manquent.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Explique pourquoi l'absence de date de paiement gêne Monsieur Lage.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> cherche un numéro, un deuxième bon, un pourcentage et une date.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape"><span class="c-num">1</span>
+        <code>Le numéro de la facture</code>
+        <code>Le numéro et la date du bon de commande</code>
+        <code>Le taux de TVA (seul le montant 2,09 € est indiqué)</code>
+        <code>La date ou le délai de paiement</code>
+      </div>
+      <div class="corr-etape"><span class="c-num">2</span><p class="res">Sans date de paiement, Monsieur Lage ne sait pas avant quand il doit payer.</p>
+        <p class="conclu">Une facture incomplète doit être signalée au fournisseur.</p></div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 4 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 4</span>
+    <span class="badge badge-exam">★ examen</span>
+    <span class="exo-titre-txt">Vrai ou faux ? Justifie.</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Lucas, apprenti chez AU PAIN DORÉ, affirme plusieurs choses sur la facture n° 278. Monsieur Lage te demande de vérifier.
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>« C'est AU PAIN DORÉ qui a rédigé la facture. »</p></div>
+      <div class="question"><span class="q-num">2</span><p>« La facture donne le prix unitaire HT de chaque produit. »</p></div>
+      <div class="question"><span class="q-num">3</span><p>« Le net à payer, c'est le montant TTC. »</p></div>
+      <div class="question"><span class="q-num">4</span><p>« Le numéro du bon de livraison n'est pas obligatoire sur la facture. »</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> une justification commence par « car » ou « parce que ».</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape"><span class="c-num">1</span> <span class="res">Faux</span> : la facture est établie par le fournisseur, CENTRE PRIMEURS.</div>
+      <div class="corr-etape"><span class="c-num">2</span> <span class="res">Vrai</span> : c'est une mention obligatoire (caractéristiques détaillées des produits).</div>
+      <div class="corr-etape"><span class="c-num">3</span> <span class="res">Vrai</span> : net à payer = net HT + TVA = montant toutes taxes comprises (36,18 €).</div>
+      <div class="corr-etape"><span class="c-num">4</span> <span class="res">Faux</span> : le numéro et la date du bon de livraison sont obligatoires (document 1).</div>
+    </div>
+  </div>
+</details>
+
+<hr class="section-sep">
+
+<!-- ══════════════════════════════════════════════════════════
+     BLOC 2 – VÉRIFIER UNE FACTURE (séance 2)
+══════════════════════════════════════════════════════════ -->
+<div class="bloc-titre" id="verifier" style="margin-top:40px">
+  <span class="icone">🔍</span>
+  <h2><small>Séance 2 · 1 h</small>Bloc 2 – Vérifier une facture</h2>
+</div>
+
+<div class="memo">
+  <div class="memo-titre">🗂 mémo</div>
+  <code>Étape A – concordance : facture + bon de livraison + mercuriale (quantité, prix, référence).</code>
+  <code>Étape B – conditions de vente : facture + bon de commande (remise, transport, paiement).</code>
+  <code>Étape C – calculs : facture seule.</code>
+  <code>En cas d'erreur, le fournisseur envoie une nouvelle facture (qui annule la première) ou une facture d'avoir (note d'avoir).</code>
+  <p class="note">Sources : document 2 (page 68), documents 3, 4 et 5 (pages 69 et 70), document 6 (page 71).</p>
+</div>
+
+<!-- EX 5 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 5</span>
+    <span class="badge badge-1">⬆ décollage</span>
+    <span class="exo-titre-txt">Les 3 étapes du contrôle (exercice 2 du manuel)</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Monsieur Lage pose sur le plan de travail : la facture n° 278, le bon de livraison n° 6589, le bon de commande n° 2024/10 et la mercuriale fruits.
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Réponds à l'exercice 2 du manuel (page 69) : écris les 3 étapes A, B, C.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Pour chaque étape, indique les documents à prendre sur le plan de travail.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> le document 2 (page 68) te donne tout, dans l'ordre.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <table class="tableau-corr">
+        <tr><th>Étape</th><th>Je vérifie</th><th>Documents</th></tr>
+        <tr><td>A</td><td>Les produits facturés sont bien les produits livrés</td><td class="val">Facture + bon de livraison + mercuriale</td></tr>
+        <tr><td>B</td><td>Les conditions de vente</td><td class="val">Facture + bon de commande</td></tr>
+        <tr><td>C</td><td>Les calculs</td><td class="val">Facture</td></tr>
+      </table>
+    </div>
+  </div>
+</details>
+
+<!-- EX 6 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 6</span>
+    <span class="badge badge-2">◆ intermédiaire</span>
+    <span class="exo-titre-txt">Mission détective (exercice 3 du manuel)</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Compare la facture (page 68) avec la mercuriale (document 3), le bon de livraison (document 4) et le bon de commande (document 5). Remplis ce tableau sur ton cahier.
+    </div>
+    <div class="table-wrap">
+      <table class="tableau-donnees">
+        <tr><th>Produit</th><th>Qté facturée</th><th>Qté livrée</th><th>PU facturé</th><th>PU mercuriale</th><th>OK ?</th></tr>
+        <tr><td>Citrons</td><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td></tr>
+        <tr><td>Oranges</td><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td></tr>
+        <tr><td>Pommes Golden</td><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td></tr>
+      </table>
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Complète le tableau.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Rédige les anomalies trouvées (exercice 3 du manuel, page 71).</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> lis aussi la case « réserves » en bas du bon de livraison.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape"><span class="c-num">1</span>
+        <table class="tableau-corr">
+          <tr><th>Produit</th><th>Facturé</th><th>Livré</th><th>PU facturé</th><th>PU mercuriale</th><th>OK ?</th></tr>
+          <tr><td>Citrons</td><td>3 kg</td><td>3 kg</td><td>2,70</td><td>2,65</td><td class="val">❌ prix</td></tr>
+          <tr><td>Oranges</td><td>5 kg</td><td>5 kg</td><td>2,20</td><td>2,20</td><td class="val">✅</td></tr>
+          <tr><td>Pommes</td><td>2 cartons</td><td>1 carton</td><td>8,50</td><td>8,50</td><td class="val">❌ quantité</td></tr>
+        </table>
+      </div>
+      <div class="corr-etape"><span class="c-num">2</span>
+        <code>Le prix unitaire HT des citrons est faux : 2,70 € au lieu de 2,65 € le kg.</code>
+        <code>2 cartons de 5 kg de pommes sont facturés alors qu'un seul a été reçu (réserve sur le bon de livraison).</code>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 7 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 7</span>
+    <span class="badge badge-2">◆ intermédiaire</span>
+    <span class="exo-titre-txt">Réagir et recalculer (exercices 4 et 5 du manuel)</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Tu as trouvé deux erreurs. Monsieur Lage te demande : « Et maintenant, on fait quoi ? »
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>À l'aide du document 6 (page 71), explique ce qu'il faut demander à CENTRE PRIMEURS.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Complète le tableau de l'exercice 5 du manuel : recalcule le montant HT des citrons et des pommes.</p></div>
+      <div class="question"><span class="q-num">3</span><p>De combien la facture était-elle trop élevée, en montant brut HT ?</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> montant HT = quantité × prix unitaire HT.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape"><span class="c-num">1</span><p>Contacter CENTRE PRIMEURS et demander <span class="res">une nouvelle facture</span> qui remplace la première, ou <span class="res">une facture d'avoir</span>.</p></div>
+      <div class="corr-etape"><span class="c-num">2</span>
+        <code>Citrons : 3 × 2,65 = 7,95 €</code>
+        <code>Pommes Golden : 1 × 8,50 = 8,50 €</code>
+      </div>
+      <div class="corr-etape"><span class="c-num">3</span>
+        <code>Citrons : 8,10 – 7,95 = 0,15 € · pommes : 17,00 – 8,50 = 8,50 €</code>
+        <p class="res">Total : 0,15 + 8,50 = 8,65 € HT en trop.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 8 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 8</span>
+    <span class="badge badge-exam">★ examen</span>
+    <span class="exo-titre-txt">Œil de lynx : deux détails à signaler</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Monsieur Lage te met au défi : « Il reste encore deux détails bizarres dans les documents 4 et 5. Trouve-les ! »
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Lis la date écrite à la main en bas du bon de livraison (document 4). Que remarques-tu ?</p></div>
+      <div class="question"><span class="q-num">2</span><p>Lis les conditions de transport du bon de commande (document 5). Calcule si la commande dépasse 300 €. Les frais de port de la facture sont-ils logiques ?</p></div>
+      <div class="question"><span class="q-num">3</span><p>Ce deuxième point est-il en faveur d'AU PAIN DORÉ ou du fournisseur ?</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> « franco » veut dire que le transport est gratuit pour le client.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape"><span class="c-num">1</span><p>La date manuscrite est le <span class="res">11/02/2025</span> alors que la livraison a eu lieu le 11/02/2024. C'est une erreur d'écriture à corriger.</p></div>
+      <div class="corr-etape"><span class="c-num">2</span>
+        <code>Montant brut de la commande : 36,10 € HT, donc moins de 300 €.</code>
+        <p>D'après le bon de commande, le transport devrait coûter 25 €. Or la facture indique « franco ».</p>
+      </div>
+      <div class="corr-etape"><span class="c-num">3</span><p class="res">En faveur d'AU PAIN DORÉ : il ne paie pas les 25 € de transport.</p>
+        <p class="conclu">Ces deux points ne figurent pas dans le corrigé du manuel. Ils restent à signaler à Monsieur Lage, qui décide.</p></div>
+    </div>
+  </div>
+</details>
+
+<hr class="section-sep">
+
+<!-- ══════════════════════════════════════════════════════════
+     BLOC 3 – LA TVA (séance 3)
+══════════════════════════════════════════════════════════ -->
+<div class="bloc-titre" id="tva" style="margin-top:40px">
+  <span class="icone">🏛️</span>
+  <h2><small>Séance 3 · 1 h</small>Bloc 3 – La TVA</h2>
+</div>
+
+<div class="memo">
+  <div class="memo-titre">🗂 mémo</div>
+  <code>TVA = taxe sur la valeur ajoutée. C'est un impôt indirect : le client la paie au vendeur, qui la reverse à l'État.</code>
+  <code>5,5 % (taux réduit) : boissons sans alcool, matières premières, majorité des produits non destinés à une consommation immédiate.</code>
+  <code>10 % : produits consommés sur place, snacking (sur place ou à emporter).</code>
+  <code>20 % : boissons alcoolisées, confiseries, bonbons, spécialités à base de chocolat, majorité des menus.</code>
+  <code>Montant TVA = net HT × taux · net à payer TTC = net HT + montant TVA</code>
+  <p class="note">Source : document 7 du manuel, page 72.</p>
+</div>
+
+<!-- EX 9 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 9</span>
+    <span class="badge badge-1">⬆ décollage</span>
+    <span class="exo-titre-txt">TVA : qui paie, qui encaisse ? (exercices 6 et 7 du manuel)</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Une cliente achète une tarte au citron chez AU PAIN DORÉ. Elle demande à la vendeuse : « La TVA, c'est moi qui l'envoie aux impôts ? »
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Donne la signification du sigle TVA (exercice 6 du manuel).</p></div>
+      <div class="question"><span class="q-num">2</span><p>Explique pourquoi la TVA est un impôt indirect (exercice 7 du manuel).</p></div>
+      <div class="question"><span class="q-num">3</span><p>Réponds à la cliente en une phrase.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> « indirect » : l'argent fait un détour avant d'arriver à l'État.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape"><span class="c-num">1</span><p class="res">Taxe sur la valeur ajoutée.</p></div>
+      <div class="corr-etape"><span class="c-num">2</span><p>Le client ne paie pas directement l'impôt à l'État. C'est le vendeur qui collecte la TVA payée par le client puis la reverse à l'État.</p></div>
+      <div class="corr-etape"><span class="c-num">3</span><p class="res">« Non madame, vous payez la TVA dans le prix et c'est la pâtisserie qui la reverse à l'État. »</p></div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 10 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 10</span>
+    <span class="badge badge-1">⬆ décollage</span>
+    <span class="exo-titre-txt">Le bon taux pour chaque produit</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Samedi matin chez AU PAIN DORÉ. Voici ce qui est vendu ou acheté dans la journée.
+    </div>
+    <div class="table-wrap">
+      <table class="tableau-donnees">
+        <tr><th>Produit</th><th>Taux ?</th></tr>
+        <tr><td>a. Une tarte aux pommes à emporter</td><td>…</td></tr>
+        <tr><td>b. Un café et un croissant mangés au salon de thé</td><td>…</td></tr>
+        <tr><td>c. Un ballotin de chocolats</td><td>…</td></tr>
+        <tr><td>d. Un sandwich à emporter</td><td>…</td></tr>
+        <tr><td>e. Un sac de farine acheté au fournisseur</td><td>…</td></tr>
+        <tr><td>f. Une bouteille de cidre</td><td>…</td></tr>
+        <tr><td>g. Un jus d'orange en bouteille à emporter</td><td>…</td></tr>
+      </table>
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>À l'aide du document 7, indique le taux de TVA de chaque produit : 5,5 %, 10 % ou 20 %.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> demande-toi d'abord : sur place ou pas ? Puis : chocolat, bonbon ou alcool ?</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <table class="tableau-corr">
+        <tr><th>Produit</th><th>Taux</th><th>Pourquoi</th></tr>
+        <tr><td>a. Tarte à emporter</td><td class="val">5,5 %</td><td>Pas consommée immédiatement</td></tr>
+        <tr><td>b. Café + croissant sur place</td><td class="val">10 %</td><td>Consommé sur place</td></tr>
+        <tr><td>c. Ballotin de chocolats</td><td class="val">20 %</td><td>Spécialité à base de chocolat</td></tr>
+        <tr><td>d. Sandwich à emporter</td><td class="val">10 %</td><td>Snacking</td></tr>
+        <tr><td>e. Farine</td><td class="val">5,5 %</td><td>Matière première</td></tr>
+        <tr><td>f. Cidre</td><td class="val">20 %</td><td>Boisson alcoolisée</td></tr>
+        <tr><td>g. Jus d'orange à emporter</td><td class="val">5,5 %</td><td>Boisson sans alcool</td></tr>
+      </table>
+    </div>
+  </div>
+</details>
+
+<!-- EX 11 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 11</span>
+    <span class="badge badge-2">◆ intermédiaire</span>
+    <span class="exo-titre-txt">Vérifier la TVA de la facture n° 278 (exercices 8 et 9 du manuel)</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Sur la facture n° 278 : net HT = 34,29 € · TVA 5,5 % = 1,89 € · net à payer = 36,18 €.
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Le taux de 5,5 % est-il le bon ? Justifie (exercice 8 du manuel).</p></div>
+      <div class="question"><span class="q-num">2</span><p>Écris le calcul du montant de la TVA, puis celui du net à payer (exercice 9 du manuel). Vérifie avec ta calculatrice.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> 5,5 % = 0,055. Arrondis au centime.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape"><span class="c-num">1</span><p class="res">Oui. Les fruits sont des matières premières, donc le taux de 5,5 % est correct.</p></div>
+      <div class="corr-etape"><span class="c-num">2</span>
+        <code>Montant TVA = net HT × taux = 34,29 × 0,055 = 1,886 → 1,89 €</code>
+        <code>Net à payer TTC = net HT + TVA = 34,29 + 1,89 = 36,18 €</code>
+        <p class="conclu">Les calculs de TVA de la facture sont justes.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 12 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 12</span>
+    <span class="badge badge-exam">★ examen</span>
+    <span class="exo-titre-txt">Calculer la TVA à l'achat et à la vente</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      AU PAIN DORÉ achète <strong>4 sacs de farine T45 de 25 kg à 19,60 € HT</strong> le sac. Le même jour, la boutique vend un <strong>ballotin de chocolats à 15,00 € HT</strong>.
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Calcule le montant HT de l'achat de farine.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Choisis le taux de TVA de la farine, puis calcule la TVA et le montant TTC.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Choisis le taux de TVA du ballotin, puis calcule la TVA et le prix TTC.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> présente toujours : formule → calcul → résultat avec l'unité (€).</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape"><span class="c-num">1</span><code>4 × 19,60 = 78,40 € HT</code></div>
+      <div class="corr-etape"><span class="c-num">2</span>
+        <code>Taux 5,5 % (matière première)</code>
+        <code>TVA = 78,40 × 0,055 = 4,312 → 4,31 €</code>
+        <code>TTC = 78,40 + 4,31 = 82,71 €</code>
+      </div>
+      <div class="corr-etape"><span class="c-num">3</span>
+        <code>Taux 20 % (spécialité à base de chocolat)</code>
+        <code>TVA = 15,00 × 0,20 = 3,00 € · TTC = 15,00 + 3,00 = 18,00 €</code>
+        <p class="conclu">À l'achat, AU PAIN DORÉ paie la TVA au fournisseur. À la vente, il la collecte auprès du client.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<hr class="section-sep">
+
+<!-- ══════════════════════════════════════════════════════════
+     BLOC 4 – LES RÉDUCTIONS (séance 4)
+══════════════════════════════════════════════════════════ -->
+<div class="bloc-titre" id="reductions" style="margin-top:40px">
+  <span class="icone">🏷️</span>
+  <h2><small>Séance 4 · 1 h</small>Bloc 4 – Les réductions sur facture</h2>
+</div>
+
+<div class="memo">
+  <div class="memo-titre">🗂 mémo</div>
+  <code>Réductions commerciales, « les 3 R » : rabais (marchandise non conforme ou retard de livraison) · remise (importance de la vente ou nombre de commandes) · ristourne (ensemble des achats sur une période).</code>
+  <code>Réduction financière : escompte (paiement comptant ou anticipé).</code>
+  <code>Montant brut HT – réduction = net commercial HT</code>
+  <code>Net commercial HT + frais de port = net HT · net HT + TVA = net à payer TTC</code>
+  <p class="note">Source : document 8 du manuel, page 73, et pied de la facture n° 278.</p>
+</div>
+
+<!-- EX 13 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 13</span>
+    <span class="badge badge-1">⬆ décollage</span>
+    <span class="exo-titre-txt">Rabais, remise, ristourne ou escompte ? (exercice 13 du manuel)</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Fais d'abord l'exercice 13 du manuel (page 74) en reliant au crayon. Puis classe ces deux situations de plus, vécues chez AU PAIN DORÉ.
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Relie les 4 situations de l'exercice 13 à la bonne réduction.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Les framboises livrées sont abîmées. Le fournisseur baisse le prix. Quelle réduction ?</p></div>
+      <div class="question"><span class="q-num">3</span><p>Monsieur Lage paie la facture le jour de la livraison. Le fournisseur lui accorde 2 %. Quelle réduction ?</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> problème de qualité ou retard = rabais. Paiement rapide = escompte.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape"><span class="c-num">1</span>
+        <code>Le client paie au comptant → escompte</code>
+        <code>Le client qui a passé le plus de commandes ce trimestre → ristourne</code>
+        <code>Livraison avec 2 jours de retard → rabais</code>
+        <code>Réduction à partir de 50 € d'achats → remise</code>
+      </div>
+      <div class="corr-etape"><span class="c-num">2</span><p class="res">Rabais (marchandise non conforme).</p></div>
+      <div class="corr-etape"><span class="c-num">3</span><p class="res">Escompte (paiement comptant).</p></div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 14 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 14</span>
+    <span class="badge badge-2">◆ intermédiaire</span>
+    <span class="exo-titre-txt">La remise de la facture n° 278 (exercices 10, 11 et 12 du manuel)</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Sur la facture n° 278 : montant brut HT = 36,10 € · remise de 5 % = 1,81 € · net commercial HT = 34,29 €.
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>CENTRE PRIMEURS a-t-il accordé une réduction ? Laquelle ? (exercice 10)</p></div>
+      <div class="question"><span class="q-num">2</span><p>Écris le calcul de la remise puis celui du net commercial (exercice 11).</p></div>
+      <div class="question"><span class="q-num">3</span><p>Quel est l'intérêt pour un fournisseur d'accorder une réduction ? (exercice 12)</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> 5 % = 0,05.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape"><span class="c-num">1</span><p class="res">Oui, une remise de 5 %. Elle était prévue sur le bon de commande.</p></div>
+      <div class="corr-etape"><span class="c-num">2</span>
+        <code>Remise = montant brut HT × taux = 36,10 × 0,05 = 1,805 → 1,81 €</code>
+        <code>Net commercial HT = 36,10 – 1,81 = 34,29 €</code>
+      </div>
+      <div class="corr-etape"><span class="c-num">3</span><p>Fidéliser le client et le remercier pour la régularité de ses commandes.</p></div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 15 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 15</span>
+    <span class="badge badge-exam">★ examen</span>
+    <span class="exo-titre-txt">Compléter un pied de facture</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Pour la galette des rois, AU PAIN DORÉ commande de la farine, du sucre et de la poudre d'amandes chez un grossiste. Le pied de la facture est incomplet.
+    </div>
+    <div class="table-wrap">
+      <table class="tableau-donnees">
+        <tr><th>Ligne</th><th>Montant (€)</th></tr>
+        <tr><td>Montant brut HT</td><td class="num">420,00</td></tr>
+        <tr><td>Remise de 4 %</td><td class="num">…</td></tr>
+        <tr><td>Net commercial HT</td><td class="num">…</td></tr>
+        <tr><td>Frais de port</td><td class="num">15,00</td></tr>
+        <tr><td>Net HT</td><td class="num">…</td></tr>
+        <tr><td>TVA …… %</td><td class="num">…</td></tr>
+        <tr><td>Net à payer</td><td class="num">…</td></tr>
+      </table>
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Complète chaque ligne en écrivant le calcul.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Justifie le taux de TVA choisi.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> suis le mémo ligne par ligne, du haut vers le bas.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape"><span class="c-num">1</span>
+        <table class="tableau-corr">
+          <tr><th>Ligne</th><th>Calcul</th><th>Montant</th></tr>
+          <tr><td>Remise 4 %</td><td>420,00 × 0,04</td><td class="val">16,80</td></tr>
+          <tr><td>Net commercial HT</td><td>420,00 – 16,80</td><td class="val">403,20</td></tr>
+          <tr><td>Net HT</td><td>403,20 + 15,00</td><td class="val">418,20</td></tr>
+          <tr><td>TVA 5,5 %</td><td>418,20 × 0,055 = 23,001</td><td class="val">23,00</td></tr>
+          <tr><td>Net à payer</td><td>418,20 + 23,00</td><td class="val">441,20</td></tr>
+        </table>
+      </div>
+      <div class="corr-etape"><span class="c-num">2</span><p class="res">5,5 % : farine, sucre et poudre d'amandes sont des matières premières.</p></div>
+    </div>
+  </div>
+</details>
+
+<hr class="section-sep">
+
+<!-- ══════════════════════════════════════════════════════════
+     BLOC 5 – SUJETS TYPE EXAMEN (séance 5)
+══════════════════════════════════════════════════════════ -->
+<div class="bloc-titre" id="examen" style="margin-top:40px">
+  <span class="icone">🎓</span>
+  <h2><small>Séance 5 · 1 h</small>Bloc 5 – Sujets type examen</h2>
+</div>
+
+<div class="memo">
+  <div class="memo-titre">🗂 mémo</div>
+  <code>Contrôler une facture : livraison (bon de livraison) → conditions (bon de commande) → calculs.</code>
+  <code>Brut HT – réduction = net commercial · + port = net HT · + TVA = net à payer TTC</code>
+  <code>Une erreur trouvée = demander une nouvelle facture ou une facture d'avoir.</code>
+  <p class="note">Ces sujets préparent les questions écrites des épreuves EP1 (contrôle de la livraison) et EP2 (coûts, taxes). Travaille seul, sans le mémo, puis corrige-toi.</p>
+</div>
+
+<!-- EX 16 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 16</span>
+    <span class="badge badge-exam">★ examen</span>
+    <span class="exo-titre-txt">Questions éclair (10 minutes)</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Le jury te pose des questions courtes sur la facture. Réponds en une phrase à chacune.
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Cite 4 mentions obligatoires d'une facture.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Quels documents utilises-tu pour vérifier les quantités facturées ?</p></div>
+      <div class="question"><span class="q-num">3</span><p>Cite les 3 taux de TVA et donne un produit de pâtisserie pour chacun.</p></div>
+      <div class="question"><span class="q-num">4</span><p>Quelle est la différence entre une remise et un escompte ?</p></div>
+      <div class="question"><span class="q-num">5</span><p>Que signifie « franco » ?</p></div>
+    </div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape"><span class="c-num">1</span> Par exemple : numéro et date de la facture, identité du fournisseur et du client, taux et montant de la TVA, date de paiement.</div>
+      <div class="corr-etape"><span class="c-num">2</span> La facture, le bon de livraison (et la mercuriale pour les prix).</div>
+      <div class="corr-etape"><span class="c-num">3</span> 5,5 % : tarte à emporter · 10 % : pâtisserie mangée au salon de thé · 20 % : ballotin de chocolats.</div>
+      <div class="corr-etape"><span class="c-num">4</span> La remise est commerciale (importance de la commande). L'escompte est financier (paiement comptant ou anticipé).</div>
+      <div class="corr-etape"><span class="c-num">5</span> Le transport est gratuit pour le client.</div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 17 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 17</span>
+    <span class="badge badge-exam">★ examen</span>
+    <span class="exo-titre-txt">La facture d'avoir de CENTRE PRIMEURS</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      CENTRE PRIMEURS reconnaît ses erreurs sur la facture n° 278 (prix des citrons et carton de pommes en trop). Monsieur Lage veut savoir combien il doit vraiment payer. Garde la remise de 5 %, le franco et la TVA à 5,5 %.
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Calcule le nouveau montant brut HT (citrons, oranges, pommes).</p></div>
+      <div class="question"><span class="q-num">2</span><p>Calcule la remise, le net commercial, la TVA et le net à payer corrigé.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Calcule le montant TTC de la facture d'avoir (ce qui était facturé en trop).</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> reprends tes résultats de l'exercice 7. Le net à payer doit être plus petit que 36,18 €.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape"><span class="c-num">1</span><code>7,95 + 11,00 + 8,50 = 27,45 € HT</code></div>
+      <div class="corr-etape"><span class="c-num">2</span>
+        <table class="tableau-corr">
+          <tr><th>Ligne</th><th>Calcul</th><th>Montant</th></tr>
+          <tr><td>Remise 5 %</td><td>27,45 × 0,05 = 1,3725</td><td class="val">1,37</td></tr>
+          <tr><td>Net commercial HT</td><td>27,45 – 1,37</td><td class="val">26,08</td></tr>
+          <tr><td>Frais de port</td><td>franco</td><td class="val">0,00</td></tr>
+          <tr><td>TVA 5,5 %</td><td>26,08 × 0,055 = 1,4344</td><td class="val">1,43</td></tr>
+          <tr><td>Net à payer</td><td>26,08 + 1,43</td><td class="val">27,51</td></tr>
+        </table>
+      </div>
+      <div class="corr-etape"><span class="c-num">3</span><code>36,18 – 27,51 = 8,67 € TTC</code>
+        <p class="conclu">La facture d'avoir s'élève à 8,67 € TTC. Elle doit indiquer le numéro et la date de la facture n° 278 (document 6).</p></div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 18 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 18</span>
+    <span class="badge badge-exam">★ examen</span>
+    <span class="exo-titre-txt">Sujet complet : la facture de la laiterie (30 minutes)</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Monsieur Lage est absent. Tu reçois la facture n° 1045 de la <strong>Laiterie du Val</strong>, fournisseur d'AU PAIN DORÉ.<br>
+      <strong>Bon de commande :</strong> beurre de tourage 10 plaques de 2 kg à 18,00 € HT · crème UHT 35 % MG 12 L à 4,20 € HT · lait entier 20 L à 1,05 € HT · remise 3 % · franco.<br>
+      <strong>Bon de livraison :</strong> tout a été livré, sans réserve.
+    </div>
+    <div class="table-wrap">
+      <table class="tableau-donnees">
+        <tr><th>Produit</th><th>Qté</th><th>PU HT</th><th>Montant HT</th></tr>
+        <tr><td>Beurre de tourage (plaque 2 kg)</td><td>10</td><td>18,00</td><td class="num">180,00</td></tr>
+        <tr><td>Crème UHT 35 % MG (L)</td><td>12</td><td>4,50</td><td class="num">54,00</td></tr>
+        <tr><td>Lait entier (L)</td><td>20</td><td>1,05</td><td class="num">21,00</td></tr>
+        <tr><td colspan="3">Montant brut HT</td><td class="num">255,00</td></tr>
+        <tr><td colspan="3">Remise 3 %</td><td class="num">7,65</td></tr>
+        <tr><td colspan="3">Net commercial HT / net HT (franco)</td><td class="num">247,35</td></tr>
+        <tr><td colspan="3">TVA 20 %</td><td class="num">49,47</td></tr>
+        <tr><td colspan="3">Net à payer</td><td class="num">296,82</td></tr>
+      </table>
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Vérifie la facture en suivant les 3 étapes. Relève les 2 erreurs.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Justifie le bon taux de TVA.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Recalcule la facture correcte, du montant brut HT au net à payer.</p></div>
+      <div class="question"><span class="q-num">4</span><p>Calcule l'écart entre la facture reçue et la facture correcte.</p></div>
+      <div class="question"><span class="q-num">5</span><p>Rédige en 2 phrases le message à laisser à Monsieur Lage.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Coup de pouce :</strong> une erreur porte sur un prix, l'autre sur un pourcentage. Beurre, crème et lait sont des matières premières.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape"><span class="c-num">1</span>
+        <code>Erreur 1 (conditions de vente) : crème facturée 4,50 € au lieu de 4,20 € HT le litre.</code>
+        <code>Erreur 2 (calculs) : TVA à 20 % au lieu de 5,5 %.</code>
+      </div>
+      <div class="corr-etape"><span class="c-num">2</span><p class="res">5,5 % : beurre, crème et lait sont des matières premières.</p></div>
+      <div class="corr-etape"><span class="c-num">3</span>
+        <table class="tableau-corr">
+          <tr><th>Ligne</th><th>Calcul</th><th>Montant</th></tr>
+          <tr><td>Crème</td><td>12 × 4,20</td><td class="val">50,40</td></tr>
+          <tr><td>Montant brut HT</td><td>180,00 + 50,40 + 21,00</td><td class="val">251,40</td></tr>
+          <tr><td>Remise 3 %</td><td>251,40 × 0,03 = 7,542</td><td class="val">7,54</td></tr>
+          <tr><td>Net commercial HT = net HT</td><td>251,40 – 7,54</td><td class="val">243,86</td></tr>
+          <tr><td>TVA 5,5 %</td><td>243,86 × 0,055 = 13,4123</td><td class="val">13,41</td></tr>
+          <tr><td>Net à payer</td><td>243,86 + 13,41</td><td class="val">257,27</td></tr>
+        </table>
+      </div>
+      <div class="corr-etape"><span class="c-num">4</span><code>296,82 – 257,27 = 39,55 € TTC facturés en trop</code></div>
+      <div class="corr-etape"><span class="c-num">5</span><p class="res">« La facture n° 1045 de la Laiterie du Val contient deux erreurs : le prix de la crème et le taux de TVA. Il faut leur demander une facture d'avoir de 39,55 € ou une nouvelle facture de 257,27 €. »</p></div>
+    </div>
+  </div>
+</details>
+
+</main>
+
+<footer class="site-footer">
+  CAP pâtissier – Gestion appliquée  |  Chapitre 10 : la facture  |  18 exercices progressifs
+</footer>
+
+<script>
+function toggleCorr(btn) {
+  const corr = btn.nextElementSibling;
+  const isVisible = corr.classList.contains('visible');
+  corr.classList.toggle('visible', !isVisible);
+  btn.textContent = isVisible ? '✅ Voir la correction' : '🔒 Masquer la correction';
+}
+</script>
+</body>
+</html>
